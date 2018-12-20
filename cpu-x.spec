@@ -22,7 +22,7 @@ Buildrequires: pkgconfig(ncurses)
 Buildrequires: pkgconfig(libcpuid)
 Requires: hicolor-icon-theme
 
-ExclusiveArch: %ix86 x86_64
+#ExclusiveArch: %ix86 x86_64
 
 %description
 CPU-X is a Free software that gathers information on CPU, motherboard and more.
