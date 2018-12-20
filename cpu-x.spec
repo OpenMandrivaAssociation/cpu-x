@@ -36,14 +36,15 @@ NCurses. A dump mode is present from command line.
 %setup -qn %{oname}-%{version}
 
 %build
-%cmake_insource
-%make_build
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
+make %{?_smp_mflags}
+
 
 %install
-%makeinstall_std
-# fix run as root for sysvinit
-sed 's|Exec=/usr/bin/cpu-x_polkit|Exec=xdg-su -c /usr/bin/cpu-x|' -i %buildroot%_desktopdir/cpu-x-root.desktop
-%find_lang %name
+cd build
+make DESTDIR=%{buildroot} install
+
 
 %files -f %name.lang
 %_bindir/*
