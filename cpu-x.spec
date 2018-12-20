@@ -33,7 +33,7 @@ It can be used in graphical mode by using GTK or in text-based mode by using
 NCurses. A dump mode is present from command line. 
 
 %prep
-%setup -q n %{oname}-%{version}
+%setup -qn %{oname}-%{version}
 
 %build
 %cmake_insource
