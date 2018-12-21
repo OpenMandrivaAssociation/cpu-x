@@ -22,7 +22,7 @@ Buildrequires: pkgconfig(ncurses)
 Buildrequires: pkgconfig(libcpuid)
 Requires: hicolor-icon-theme
 
-ExclusiveArch: %ix86 x86_64
+#ExclusiveArch: %ix86 x86_64
 
 %description
 CPU-X is a Free software that gathers information on CPU, motherboard and more.
@@ -36,19 +36,24 @@ NCurses. A dump mode is present from command line.
 %setup -qn %{oname}-%{version}
 
 %build
-%cmake_insource
-%make_build
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
+make %{?_smp_mflags}
+
 
 %install
-%makeinstall_std
-# fix run as root for sysvinit
-sed 's|Exec=/usr/bin/cpu-x_polkit|Exec=xdg-su -c /usr/bin/cpu-x|' -i %buildroot%_desktopdir/cpu-x-root.desktop
-%find_lang %name
+cd build
+make DESTDIR=%{buildroot} install
 
-%files -f %name.lang
-%_bindir/*
-%_datadir/%name
-%_iconsdir/hicolor/*/*/*
-%_desktopdir/*
-%_datadir/polkit-1/actions/org.pkexec.cpu-x.policy
-%_datadir/metainfo/%name.appdata.xml
+
+
+%files 
+%{_usr}/bin/cpu-x
+%{_usr}/bin/cpu-x_polkit
+%{_usr}/share/applications/*
+%{_usr}/share/cpu-x/*
+%{_usr}/share/icons/*
+%{_usr}/share/locale/*
+#%{_usr}/share/pixmaps/cpu-x.png
+%{_usr}/share/polkit-1/actions/org.pkexec.cpu-x.policy
+%{_usr}/share/metainfo/cpu-x.appdata.xml
