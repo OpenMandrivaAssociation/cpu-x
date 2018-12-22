@@ -6,7 +6,7 @@ Version: 3.2.3
 Release: 1
 Summary: CPU-X is a Free software that gathers information on CPU, motherboard and more
 License: GPLv3+
-Group: System/Kernel and hardware
+Group: Monitoring
 Url: https://github.com/X0rg/CPU-X
 Source: https://github.com/X0rg/CPU-X/archive/v3.2.3/%{oname}-3.2.3.tar.gz
 #Buildrequires(pre): rpm-macros-cmake 
