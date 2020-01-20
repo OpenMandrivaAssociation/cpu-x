@@ -21,7 +21,7 @@ Buildrequires: pkgconfig(libstatgrab)
 Buildrequires: pkgconfig(ncurses) 
 Buildrequires: pkgconfig(libcpuid)
 Requires: hicolor-icon-theme
-Requires: gambas3-gb-jita
+Recommends: gambas3-gb-jita
 
 #ExclusiveArch: %ix86 x86_64
 
