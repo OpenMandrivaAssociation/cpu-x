@@ -2,8 +2,8 @@
 %define _unpackaged_files_terminate_build 1
 %define oname CPU-X
 Name: cpu-x
-Version:	3.2.4
-Release:	3
+Version:	4.0.0
+Release:	1
 Summary: CPU-X is a Free software that gathers information on CPU, motherboard and more
 License: GPLv3+
 Group: Monitoring
@@ -47,14 +47,16 @@ cd build
 make DESTDIR=%{buildroot} install
 
 
-
 %files 
 %{_usr}/bin/cpu-x
-%{_usr}/bin/cpu-x_polkit
 %{_usr}/share/applications/*
 %{_usr}/share/cpu-x/*
 %{_usr}/share/icons/*
 %{_usr}/share/locale/*
-#%{_usr}/share/pixmaps/cpu-x.png
-%{_usr}/share/polkit-1/actions/org.pkexec.cpu-x.policy
-%{_usr}/share/metainfo/cpu-x.appdata.xml
+%{_usr}/libexec/cpu-x-daemon
+%{_datadir}/bash-completion/completions/cpu-x
+%{_datadir}/fish/vendor_completions.d/cpu-x.fish
+%{_datadir}/glib-2.0/schemas/org.cpu-x.gschema.xml
+%{_datadir}/metainfo/org.cpu-x.appdata.xml
+%{_datadir}/polkit-1/actions/org.cpu-x-daemon.policy
+%{_datadir}/zsh/site-functions/_cpu-x
