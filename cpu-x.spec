@@ -2,8 +2,8 @@
 %define _unpackaged_files_terminate_build 1
 %define oname CPU-X
 Name: cpu-x
-Version:	3.2.4
-Release:	3
+Version:	4.0.0
+Release:	1
 Summary: CPU-X is a Free software that gathers information on CPU, motherboard and more
 License: GPLv3+
 Group: Monitoring
