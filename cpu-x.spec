@@ -50,11 +50,7 @@ make DESTDIR=%{buildroot} install
 
 %files 
 %{_usr}/bin/cpu-x
-%{_usr}/bin/cpu-x_polkit
 %{_usr}/share/applications/*
 %{_usr}/share/cpu-x/*
 %{_usr}/share/icons/*
 %{_usr}/share/locale/*
-#%{_usr}/share/pixmaps/cpu-x.png
-%{_usr}/share/polkit-1/actions/org.pkexec.cpu-x.policy
-%{_usr}/share/metainfo/cpu-x.appdata.xml
