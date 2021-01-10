@@ -13,9 +13,6 @@ Url: https://github.com/X0rg/CPU-X
 Source0: https://github.com/X0rg/CPU-X/archive/v%{version}/%{oname}-%{version}.tar.gz
 Buildrequires: cmake
 BuildRequires: gettext
-%ifarch %{x86_64} %{ix86}
-BuildRequires: bandwidth
-%endif
 Buildrequires: pkgconfig(gtk+-3.0) 
 Buildrequires: pkgconfig(libarchive) 
 Buildrequires: pkgconfig(libcurl) 
@@ -42,7 +39,7 @@ NCurses. A dump mode is present from command line.
 
 %build
 mkdir build && cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
+cmake -DCMAKE_BUILD_TYPE=Release -DWITH_BANDWIDTH=1 -DCMAKE_INSTALL_PREFIX=/usr ..
 make %{?_smp_mflags}
 
 %install
