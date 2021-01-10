@@ -1,17 +1,21 @@
+%global debug_package %{nil}
+
 # Unpackaged files in buildroot should terminate build
 %define _unpackaged_files_terminate_build 1
 %define oname CPU-X
 Name: cpu-x
-Version:	4.0.1
+Version:	4.1.0
 Release:	1
 Summary: CPU-X is a Free software that gathers information on CPU, motherboard and more
 License: GPLv3+
 Group: Monitoring
 Url: https://github.com/X0rg/CPU-X
 Source0: https://github.com/X0rg/CPU-X/archive/v%{version}/%{oname}-%{version}.tar.gz
-#Buildrequires(pre): rpm-macros-cmake 
 Buildrequires: cmake
-#Buildrequires: gcc-c++ 
+BuildRequires: gettext
+%ifarch %{x86_64} %{ix86}
+BuildRequires: bandwidth
+%endif
 Buildrequires: pkgconfig(gtk+-3.0) 
 Buildrequires: pkgconfig(libarchive) 
 Buildrequires: pkgconfig(libcurl) 
@@ -23,7 +27,6 @@ Buildrequires: pkgconfig(libcpuid)
 Requires: hicolor-icon-theme
 Recommends: gambas3-gb-jita
 
-#ExclusiveArch: %ix86 x86_64
 
 %description
 CPU-X is a Free software that gathers information on CPU, motherboard and more.
@@ -35,17 +38,16 @@ NCurses. A dump mode is present from command line.
 
 %prep
 %setup -qn %{oname}-%{version}
+%autopatch -p1
 
 %build
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
 make %{?_smp_mflags}
 
-
 %install
 cd build
 make DESTDIR=%{buildroot} install
-
 
 %files 
 %{_usr}/bin/cpu-x
