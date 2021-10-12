@@ -1,11 +1,11 @@
-%global debug_package %{nil}
+%define _empty_manifest_terminate_build 0
 
 # Unpackaged files in buildroot should terminate build
 %define _unpackaged_files_terminate_build 1
 %define oname CPU-X
 Name: cpu-x
 Version:	4.2.0
-Release:	1
+Release:	2
 Summary: CPU-X is a Free software that gathers information on CPU, motherboard and more
 License: GPLv3+
 Group: Monitoring
