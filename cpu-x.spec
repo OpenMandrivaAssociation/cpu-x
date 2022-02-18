@@ -4,8 +4,8 @@
 %define _unpackaged_files_terminate_build 1
 %define oname CPU-X
 Name: cpu-x
-Version:	4.2.0
-Release:	2
+Version:	4.3.0
+Release:	1
 Summary: CPU-X is a Free software that gathers information on CPU, motherboard and more
 License: GPLv3+
 Group: Monitoring
@@ -22,8 +22,13 @@ Buildrequires: pkgconfig(libstatgrab)
 Buildrequires: pkgconfig(ncurses) 
 Buildrequires: pkgconfig(libcpuid)
 BuildRequires: pkgconfig(glfw3)
+BuildRequires: pkgconfig(OpenCL)
+BuildRequires: mesa-opencl-devel
+
 Requires: hicolor-icon-theme
 Recommends: gambas3-gb-jita
+Recommends: %{_lib}opencl1
+Recommends: mesa-opencl
 
 
 %description
