@@ -1,0 +1,201 @@
+From e8bde25c217fa29e48a7d9527e34a2a084d548df Mon Sep 17 00:00:00 2001
+From: Xorg <xorgbreaker@gmail.com>
+Date: Tue, 10 May 2022 20:38:09 +0200
+Subject: [PATCH] Core: support for libproc-2
+
+Implement #219
+---
+ src/CMakeLists.txt | 31 ++++++++++++++++++++----
+ src/core.c         | 60 +++++++++++++++++++++++++++++++++++++++-------
+ src/core.h         |  2 +-
+ src/main.c         |  1 +
+ 4 files changed, 79 insertions(+), 15 deletions(-)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index efd15779..00bd6c7b 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -85,7 +85,17 @@ endif(WITH_OPENCL)
+ # Libprocps
+ set(LIBSYSTEM 0)
+ if(WITH_LIBPROCPS AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND NOT FORCE_LIBSTATGRAB)
+-	pkg_check_modules(LIBPROCPS libprocps)
++	pkg_check_modules(LIBPROC2 libproc-2)
++	if(LIBPROC2_FOUND)
++		include_directories(${LIBPROC2_INCLUDE_DIRS})
++		link_directories(${LIBPROC2_LIBRARY_DIRS})
++		add_definitions(${LIBPROC2_CFLAGS_OTHER})
++		set(LIBSYSTEM 1)
++		set(LIBPROC2 1)
++	else()
++		pkg_check_modules(LIBPROCPS libprocps)
++		set(LIBPROC2 0)
++	endif()
+ 	if(LIBPROCPS_FOUND)
+ 		include_directories(${LIBPROCPS_INCLUDE_DIRS})
+ 		link_directories(${LIBPROCPS_LIBRARY_DIRS})
+@@ -137,7 +147,11 @@ print_config("LIBPCI"              "${LIBPCI_VERSION}"      LIBPCI_FOUND      WI
+ print_config("LIBGLFW"             "${LIBGLFW_VERSION}"     LIBGLFW_FOUND     WITH_LIBGLFW)
+ print_config("OpenCL"              "${OPENCL_VERSION}"      OPENCL_FOUND      WITH_OPENCL)
+ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND NOT FORCE_LIBSTATGRAB)
+-	print_config("LIBPROCPS"   "${LIBPROCPS_VERSION}"   LIBPROCPS_FOUND   WITH_LIBPROCPS)
++	if(${LIBPROC2} EQUAL 1)
++		print_config("LIBPROC2"    "${LIBPROC2_VERSION}"    LIBPROC2_FOUND    WITH_LIBPROCPS)
++	else()
++		print_config("LIBPROCPS"   "${LIBPROCPS_VERSION}"   LIBPROCPS_FOUND   WITH_LIBPROCPS)
++	endif()
+ else()
+ 	print_config("LIBSTATGRAB" "${LIBSTATGRAB_VERSION}" LIBSTATGRAB_FOUND WITH_LIBSTATGRAB)
+ endif()
+@@ -167,11 +181,17 @@ add_executable(${DAEMON_EXEC}
+ )
+ 
+ # Libsystem extra-definitions
+-if(${LIBSYSTEM} EQUAL 0 OR ${LIBSYSTEM} EQUAL 1)
++if(${LIBSYSTEM} EQUAL 0 OR ${LIBSYSTEM} EQUAL 1) # When Libprocps is used
+ 	add_definitions(-DHAS_LIBSTATGRAB=0 -DLIBSTATGRAB_VERSION=NULL)
++	if(${LIBPROC2} EQUAL 1)
++		add_definitions(-DHAS_LIBPROCPS=0 -DLIBPROCPS_VERSION=NULL)
++	else()
++		add_definitions(-DHAS_LIBPROC2=0  -DLIBPROC2_VERSION=NULL)
++	endif()
+ endif()
+-if(${LIBSYSTEM} EQUAL 0 OR ${LIBSYSTEM} EQUAL 2)
+-	add_definitions(-DHAS_LIBPROCPS=0   -DLIBPROCPS_VERSION=NULL)
++if(${LIBSYSTEM} EQUAL 0 OR ${LIBSYSTEM} EQUAL 2) # When Libstatgrab is used
++	add_definitions(-DHAS_LIBPROC2=0  -DLIBPROC2_VERSION=NULL)
++	add_definitions(-DHAS_LIBPROCPS=0 -DLIBPROCPS_VERSION=NULL)
+ endif()
+ 
+ # Various definitions
+@@ -207,6 +227,7 @@ target_link_libraries(${APP_EXEC}
+ 	${LIBGL_LIBRARIES}
+ 	${LIBGLFW_LIBRARIES}
+ 	${OPENCL_LIBRARIES}
++	${LIBPROC2_LIBRARIES}
+ 	${LIBPROCPS_LIBRARIES}
+ 	${LIBSTATGRAB_LIBRARIES}
+ 	${DMIDECODE_LIBRARIES}
+diff --git a/src/core.c b/src/core.c
+index 5efc6c1a..bda5bb1f 100644
+--- a/src/core.c
++++ b/src/core.c
+@@ -59,10 +59,19 @@
+ # include <pci/pci.h>
+ #endif
+ 
++#if HAS_LIBPROC2
++# include <procps/meminfo.h>
++# include <procps/misc.h>
++#endif
++
+ #if HAS_LIBPROCPS
+ # include <proc/sysinfo.h>
+ #endif
+ 
++#if HAS_LIBSTATGRAB
++# include <statgrab.h>
++#endif
++
+ #if HAS_LIBGLFW
+ # include <GL/gl.h>
+ # include <GLFW/glfw3.h>
+@@ -74,9 +83,6 @@
+ # include "opencl_ext.h"
+ #endif
+ 
+-#if HAS_LIBSTATGRAB
+-# include <statgrab.h>
+-#endif
+ 
+ 
+ /************************* Public functions *************************/
+@@ -1468,6 +1474,37 @@ static int system_dynamic(Labels *data)
+ 	MemoryData *m_data = data->m_data;
+ 	static PrefixUnit pu_mem  = { .init = false }, pu_swap = { .init = false };
+ 
++#if HAS_LIBPROC2
++	double up_secs;
++	struct meminfo_info *mem_info = NULL;
++
++	MSG_VERBOSE("%s", _("Calling libprocps"));
++	/* System uptime */
++	if(procps_uptime(&up_secs, NULL) < 0)
++		MSG_ERRNO("%s", _("unable to get system uptime"));
++	else
++		uptime_s = (time_t) up_secs;
++
++	/* Memory variables */
++	if(procps_meminfo_new(&mem_info) < 0)
++		MSG_ERRNO("%s", _("unable to create meminfo structure"));
++	else
++	{
++		if(!pu_mem.init || !pu_swap.init)
++		{
++			find_best_prefix(MEMINFO_GET(mem_info, MEMINFO_MEM_TOTAL, ul_int) , MULT_K, false, &pu_mem);
++			find_best_prefix(MEMINFO_GET(mem_info, MEMINFO_SWAP_TOTAL, ul_int), MULT_K, false, &pu_swap);
++		}
++		m_data->mem_usage[BARUSED]    = MEMINFO_GET(mem_info, MEMINFO_MEM_USED,       ul_int) / (long double) pu_mem.divisor;
++		m_data->mem_usage[BARBUFFERS] = MEMINFO_GET(mem_info, MEMINFO_MEM_BUFFERS,    ul_int) / (long double) pu_mem.divisor;
++		m_data->mem_usage[BARCACHED]  = MEMINFO_GET(mem_info, MEMINFO_MEM_CACHED_ALL, ul_int) / (long double) pu_mem.divisor;
++		m_data->mem_usage[BARFREE]    = MEMINFO_GET(mem_info, MEMINFO_MEM_FREE,       ul_int) / (long double) pu_mem.divisor;
++		m_data->mem_usage[BARSWAP]    = MEMINFO_GET(mem_info, MEMINFO_SWAP_USED,      ul_int) / (long double) pu_swap.divisor;
++		m_data->mem_total             = MEMINFO_GET(mem_info, MEMINFO_MEM_TOTAL,      ul_int) / (long double) pu_mem.divisor;
++		m_data->swap_total            = MEMINFO_GET(mem_info, MEMINFO_SWAP_TOTAL,     ul_int) / (long double) pu_swap.divisor;
++	}
++#endif /* HAS_LIBPROC2 */
++
+ #if HAS_LIBPROCPS
+ 	MSG_VERBOSE("%s", _("Calling libprocps"));
+ 	/* System uptime */
+@@ -1524,14 +1561,19 @@ static int system_dynamic(Labels *data)
+ 	m_data->swap_total            = swap->total / (long double) pu_swap.divisor;
+ #endif /* HAS_LIBSTATGRAB */
+ 	/* Memory labels */
+-	for(i = USED; i < SWAP; i++)
+-		casprintf(&data->tab_system[VALUE][i], false, "%3.2Lf %s / %3.2Lf %s", m_data->mem_usage[j++], pu_mem.prefix, m_data->mem_total, pu_mem.prefix);
+-	casprintf(&data->tab_system[VALUE][SWAP], false, "%3.2Lf %s / %3.2Lf %s", m_data->mem_usage[j], pu_swap.prefix, m_data->swap_total, pu_swap.prefix);
++	if(m_data->mem_total > 0)
++		for(i = USED; i < SWAP; i++)
++			casprintf(&data->tab_system[VALUE][i], false, "%3.2Lf %s / %3.2Lf %s", m_data->mem_usage[j++], pu_mem.prefix, m_data->mem_total, pu_mem.prefix);
++	if(m_data->swap_total > 0)
++		casprintf(&data->tab_system[VALUE][SWAP], false, "%3.2Lf %s / %3.2Lf %s", m_data->mem_usage[j], pu_swap.prefix, m_data->swap_total, pu_swap.prefix);
+ 
+ 	/* Uptime label */
+-	tm = gmtime(&uptime_s);
+-	casprintf(&data->tab_system[VALUE][UPTIME], false, _("%i days, %i hours, %i minutes, %i seconds"),
+-	          tm->tm_yday, tm->tm_hour, tm->tm_min, tm->tm_sec);
++	if(uptime_s > 0)
++	{
++		tm = gmtime(&uptime_s);
++		casprintf(&data->tab_system[VALUE][UPTIME], false, _("%i days, %i hours, %i minutes, %i seconds"),
++				tm->tm_yday, tm->tm_hour, tm->tm_min, tm->tm_sec);
++	}
+ 
+ 	return err;
+ }
+diff --git a/src/core.h b/src/core.h
+index c503f55f..eae86752 100644
+--- a/src/core.h
++++ b/src/core.h
+@@ -89,7 +89,7 @@ static int system_static(Labels *data);
+ #if (HAS_LIBSYSTEM)
+ /* Dynamic elements for System tab, provided by libprocps/libstatgrab */
+ static int system_dynamic(Labels *data);
+-/* Required: HAS_LIBPROCPS || HAS_LIBSTATGRAB */
++/* Required: HAS_LIBPROC2 || HAS_LIBPROCPS || HAS_LIBSTATGRAB */
+ #endif /* HAS_LIBSYSTEM */
+ 
+ /* Report score of benchmarks */
+diff --git a/src/main.c b/src/main.c
+index a441737c..167bffb9 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -430,6 +430,7 @@ static void version(bool full_header)
+ 		{ HAS_LIBCPUID,    "LIBCPUID",    LIBCPUID_VERSION    },
+ 		{ HAS_LIBPCI,      "LIBPCI",      LIBPCI_VERSION      },
+ 		{ HAS_LIBGLFW,     "LIBGLFW",     LIBGLFW_VERSION     },
++		{ HAS_LIBPROC2,    "LIBPROC2",    LIBPROC2_VERSION    },
+ 		{ HAS_LIBPROCPS,   "LIBPROCPS",   LIBPROCPS_VERSION   },
+ 		{ HAS_LIBSTATGRAB, "LIBSTATGRAB", LIBSTATGRAB_VERSION },
+ 		{ HAS_DMIDECODE,   "DMIDECODE",   DMIDECODE_VERSION   },
