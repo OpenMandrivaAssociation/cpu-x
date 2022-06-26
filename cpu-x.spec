@@ -5,7 +5,7 @@
 %define oname CPU-X
 Name: cpu-x
 Version:	4.3.1
-Release:	1
+Release:	2
 Summary: CPU-X is a Free software that gathers information on CPU, motherboard and more
 License: GPLv3+
 Group: Monitoring
@@ -17,7 +17,7 @@ Buildrequires: pkgconfig(gtk+-3.0)
 Buildrequires: pkgconfig(libarchive) 
 Buildrequires: pkgconfig(libcurl) 
 Buildrequires: pkgconfig(libpci) 
-Buildrequires: pkgconfig(libprocps) 
+Buildrequires: pkgconfig(libproc-2)
 Buildrequires: pkgconfig(libstatgrab) 
 Buildrequires: pkgconfig(ncurses) 
 Buildrequires: pkgconfig(libcpuid)
