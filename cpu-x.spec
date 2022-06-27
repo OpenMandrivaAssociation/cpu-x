@@ -14,6 +14,7 @@ Source0: https://github.com/X0rg/CPU-X/archive/v%{version}/%{oname}-%{version}.t
 # Support for new proc-2 (4.0.0) https://github.com/X0rg/CPU-X/issues/219
 Patch0:  https://github.com/X0rg/CPU-X/commit/e8bde25c217fa29e48a7d9527e34a2a084d548df.patch
 
+BuildRequires: bandwidth
 Buildrequires: cmake
 BuildRequires: gettext
 Buildrequires: pkgconfig(gtk+-3.0) 
@@ -25,13 +26,15 @@ Buildrequires: pkgconfig(libstatgrab)
 Buildrequires: pkgconfig(ncurses) 
 Buildrequires: pkgconfig(libcpuid)
 BuildRequires: pkgconfig(glfw3)
-BuildRequires: pkgconfig(OpenCL)
+BuildRequires: cmake(OpenCLICDLoader)
 BuildRequires: mesa-opencl-devel
+BuildRequires: opencl-headers
 
 Requires: hicolor-icon-theme
 Recommends: gambas3-gb-jita
 Recommends: %{_lib}opencl1
 Recommends: mesa-opencl
+Recommends: bandwidth
 
 
 %description
