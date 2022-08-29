@@ -11,8 +11,6 @@ License: GPLv3+
 Group: Monitoring
 Url: https://github.com/X0rg/CPU-X
 Source0: https://github.com/X0rg/CPU-X/archive/v%{version}/%{oname}-%{version}.tar.gz
-# Support for new proc-2 (4.0.0) https://github.com/X0rg/CPU-X/issues/219
-Patch0:  https://github.com/X0rg/CPU-X/commit/e8bde25c217fa29e48a7d9527e34a2a084d548df.patch
 
 Buildrequires: cmake
 BuildRequires: gettext
