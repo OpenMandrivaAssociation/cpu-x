@@ -63,7 +63,7 @@ make DESTDIR=%{buildroot} install
 %{_usr}/libexec/cpu-x-daemon
 %{_datadir}/bash-completion/completions/cpu-x
 %{_datadir}/fish/vendor_completions.d/cpu-x.fish
-%{_datadir}/glib-2.0/schemas/org.cpu-x.gschema.xml
-%{_datadir}/metainfo/org.cpu-x.appdata.xml
-%{_datadir}/polkit-1/actions/org.cpu-x-daemon.policy
+#{_datadir}/glib-2.0/schemas/org.cpu-x.gschema.xml
+#{_datadir}/metainfo/org.cpu-x.appdata.xml
+#{_datadir}/polkit-1/actions/org.cpu-x-daemon.policy
 %{_datadir}/zsh/site-functions/_cpu-x
