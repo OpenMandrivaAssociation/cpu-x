@@ -5,7 +5,7 @@
 %define oname CPU-X
 Name: cpu-x
 Version:	5.0.0
-Release:	1
+Release:	2
 Summary: CPU-X is a Free software that gathers information on CPU, motherboard and more
 License: GPLv3+
 Group: Monitoring
@@ -65,5 +65,5 @@ make DESTDIR=%{buildroot} install
 %{_datadir}/fish/vendor_completions.d/cpu-x.fish
 %{_datadir}/glib-2.0/schemas/com.github.thetumultuousunicornofdarkness.cpu-x.gschema.xml
 %{_datadir}/metainfo/com.github.thetumultuousunicornofdarkness.cpu-x.appdata.xml
-%{_datadir}//polkit-1/actions/com.github.thetumultuousunicornofdarkness.cpu-x-daemon.policy
+%{_datadir}/polkit-1/actions/com.github.thetumultuousunicornofdarkness.cpu-x-daemon.policy
 %{_datadir}/zsh/site-functions/_cpu-x
