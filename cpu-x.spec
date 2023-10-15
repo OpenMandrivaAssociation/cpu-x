@@ -14,14 +14,14 @@ Source0: https://github.com/X0rg/CPU-X/archive/v%{version}/%{oname}-%{version}.t
 
 Buildrequires: cmake
 BuildRequires: gettext
-Buildrequires: pkgconfig(gtk+-3.0) 
-Buildrequires: pkgconfig(libarchive) 
-Buildrequires: pkgconfig(libcurl) 
-Buildrequires: pkgconfig(libpci) 
-Buildrequires: pkgconfig(libproc2)
-Buildrequires: pkgconfig(libstatgrab) 
-Buildrequires: pkgconfig(ncurses) 
-Buildrequires: pkgconfig(libcpuid)
+BuildRequires: pkgconfig(gtk+-3.0) 
+BuildRequires: pkgconfig(libarchive) 
+BuildRequires: pkgconfig(libcurl) 
+BuildRequires: pkgconfig(libpci) 
+BuildRequires: pkgconfig(libproc2)
+BuildRequires: pkgconfig(libstatgrab) 
+BuildRequires: pkgconfig(ncurses) 
+BuildRequires: pkgconfig(libcpuid)
 BuildRequires: pkgconfig(glfw3)
 BuildRequires: pkgconfig(OpenCL)
 BuildRequires: mesa-opencl-devel
@@ -63,7 +63,7 @@ make DESTDIR=%{buildroot} install
 %{_usr}/libexec/cpu-x-daemon
 %{_datadir}/bash-completion/completions/cpu-x
 %{_datadir}/fish/vendor_completions.d/cpu-x.fish
-#{_datadir}/glib-2.0/schemas/org.cpu-x.gschema.xml
-#{_datadir}/metainfo/org.cpu-x.appdata.xml
-#{_datadir}/polkit-1/actions/org.cpu-x-daemon.policy
+%{_datadir}/glib-2.0/schemas/com.github.thetumultuousunicornofdarkness.cpu-x.gschema.xml
+%{_datadir}/metainfo/com.github.thetumultuousunicornofdarkness.cpu-x.appdata.xml
+%{_datadir}//polkit-1/actions/com.github.thetumultuousunicornofdarkness.cpu-x-daemon.policy
 %{_datadir}/zsh/site-functions/_cpu-x
