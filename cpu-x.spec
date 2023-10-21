@@ -5,14 +5,14 @@
 %define oname CPU-X
 Name: cpu-x
 Version:	5.0.1
-Release:	1
+Release:	2
 Summary: CPU-X is a Free software that gathers information on CPU, motherboard and more
 License: GPLv3+
 Group: Monitoring
 Url: https://github.com/X0rg/CPU-X
 Source0: https://github.com/X0rg/CPU-X/archive/v%{version}/%{oname}-%{version}.tar.gz
 
-Buildrequires: cmake
+BuildRequires: cmake
 BuildRequires: gettext
 BuildRequires: pkgconfig(gtk+-3.0) 
 BuildRequires: pkgconfig(libarchive) 
@@ -24,6 +24,7 @@ BuildRequires: pkgconfig(ncurses)
 BuildRequires: pkgconfig(libcpuid)
 BuildRequires: pkgconfig(glfw3)
 BuildRequires: pkgconfig(OpenCL)
+BuildRequires: pkgconfig(gtkmm-3.0)
 BuildRequires: mesa-opencl-devel
 
 Requires: hicolor-icon-theme
