@@ -14,6 +14,7 @@ Source0: https://github.com/X0rg/CPU-X/archive/v%{version}/%{oname}-%{version}.t
 
 BuildRequires: cmake
 BuildRequires: gettext
+BuildRequires: bandwidth
 BuildRequires: pkgconfig(gtk+-3.0) 
 BuildRequires: pkgconfig(libarchive) 
 BuildRequires: pkgconfig(libcurl) 
