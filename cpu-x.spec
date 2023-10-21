@@ -1,19 +1,20 @@
 %define _empty_manifest_terminate_build 0
 
 # Unpackaged files in buildroot should terminate build
-%define _unpackaged_files_terminate_build 1
+#define _unpackaged_files_terminate_build 1
 %define oname CPU-X
 Name: cpu-x
 Version:	5.0.1
-Release:	1
+Release:	2
 Summary: CPU-X is a Free software that gathers information on CPU, motherboard and more
 License: GPLv3+
 Group: Monitoring
 Url: https://github.com/X0rg/CPU-X
 Source0: https://github.com/X0rg/CPU-X/archive/v%{version}/%{oname}-%{version}.tar.gz
 
-Buildrequires: cmake
+BuildRequires: cmake
 BuildRequires: gettext
+BuildRequires: bandwidth
 BuildRequires: pkgconfig(gtk+-3.0) 
 BuildRequires: pkgconfig(libarchive) 
 BuildRequires: pkgconfig(libcurl) 
@@ -24,6 +25,8 @@ BuildRequires: pkgconfig(ncurses)
 BuildRequires: pkgconfig(libcpuid)
 BuildRequires: pkgconfig(glfw3)
 BuildRequires: pkgconfig(OpenCL)
+BuildRequires: pkgconfig(gtkmm-3.0)
+BuildRequires: pkgconfig(vulkan)
 BuildRequires: mesa-opencl-devel
 
 Requires: hicolor-icon-theme
