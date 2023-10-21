@@ -25,6 +25,7 @@ BuildRequires: pkgconfig(libcpuid)
 BuildRequires: pkgconfig(glfw3)
 BuildRequires: pkgconfig(OpenCL)
 BuildRequires: pkgconfig(gtkmm-3.0)
+BuildRequires: pkgconfig(vulkan)
 BuildRequires: mesa-opencl-devel
 
 Requires: hicolor-icon-theme
