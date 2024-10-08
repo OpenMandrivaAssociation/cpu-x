@@ -28,6 +28,7 @@ BuildRequires: pkgconfig(OpenCL)
 BuildRequires: pkgconfig(gtkmm-3.0)
 BuildRequires: pkgconfig(vulkan)
 BuildRequires: mesa-opencl-devel
+BuildRequires: atomic-devel
 
 Requires: hicolor-icon-theme
 Recommends: gambas3-gb-jita
