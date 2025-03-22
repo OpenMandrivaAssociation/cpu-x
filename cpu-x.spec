@@ -4,7 +4,7 @@
 #define _unpackaged_files_terminate_build 1
 %define oname CPU-X
 Name: cpu-x
-Version:	5.1.3
+Version:	5.2.0
 Release:	1
 Summary: CPU-X is a Free software that gathers information on CPU, motherboard and more
 License: GPLv3+
@@ -23,7 +23,7 @@ BuildRequires: pkgconfig(libproc2)
 BuildRequires: pkgconfig(libstatgrab) 
 BuildRequires: pkgconfig(ncurses) 
 BuildRequires: pkgconfig(libcpuid)
-BuildRequires: pkgconfig(glfw3)
+BuildRequires: egl-devel
 BuildRequires: pkgconfig(OpenCL)
 BuildRequires: pkgconfig(gtkmm-3.0)
 BuildRequires: pkgconfig(vulkan)
