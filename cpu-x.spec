@@ -52,7 +52,7 @@ NCurses. A dump mode is present from command line.
 
 %build
 mkdir build && cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DWITH_BANDWIDTH=1 -DCMAKE_INSTALL_PREFIX=/usr ..
+cmake -DCMAKE_BUILD_TYPE=Release -DWITH_BANDWIDTH=0 -DCMAKE_INSTALL_PREFIX=/usr ..
 make %{?_smp_mflags}
 
 %install
