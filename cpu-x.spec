@@ -12,6 +12,7 @@ Group: Monitoring
 Url: https://github.com/X0rg/CPU-X
 Source0: https://github.com/X0rg/CPU-X/archive/v%{version}/%{oname}-%{version}.tar.gz
 
+BuildRequires: make
 BuildRequires: cmake
 BuildRequires: gettext
 BuildRequires: bandwidth
