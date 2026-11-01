@@ -4,13 +4,13 @@
 #define _unpackaged_files_terminate_build 1
 %define oname CPU-X
 Name: cpu-x
-Version:	5.4.0
+Version:	5.4.1
 Release:	1
 Summary: CPU-X is a Free software that gathers information on CPU, motherboard and more
 License: GPLv3+
 Group: Monitoring
-Url: https://github.com/X0rg/CPU-X
-Source0: https://github.com/X0rg/CPU-X/archive/v%{version}/%{oname}-%{version}.tar.gz
+Url: https://github.com/TheTumultuousUnicornOfDarkness/CPU-X
+Source0: https://github.com/TheTumultuousUnicornOfDarkness/CPU-X/archive/v%{version}/%{oname}-%{version}.tar.gz
 
 BuildRequires: make
 BuildRequires: cmake
